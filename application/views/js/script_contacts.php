@@ -37,15 +37,15 @@
   $(document).on("click", "#addContact", function(e){
     e.preventDefault();
 
-    const name = $("#name").val();
-    const username = $("#username").val();
-    const email = $("#email").val();
-    const phone = $("#phone").val();
-    const website = $("#website").val();
-    const street = $("#street").val();
-    const suite = $("#suite").val();
-    const city = $("#city").val();
-    const zipcode = $("#zipcode").val();
+    const name = $("#newContactModal #name").val();
+    const username = $("#newContactModal #username").val();
+    const email = $("#newContactModal #email").val();
+    const phone = $("#newContactModal #phone").val();
+    const website = $("#newContactModal #website").val();
+    const street = $("#newContactModal #street").val();
+    const suite = $("#newContactModal #suite").val();
+    const city = $("#newContactModal #city").val();
+    const zipcode = $("#newContactModal #zipcode").val();
 
     //Verifica se todos os campos estão preenchidos
     if(name == "" || username == "" || email == "" || phone == "" || website == "" || street == "" || suite == "" || city == "" || zipcode == "")
@@ -75,8 +75,8 @@
           if(data.success)
           {
             contactsDataTable.ajax.reload(function() {
-              $("#form")[0].reset();
-              $('#exampleModal').modal('hide');
+              $("#newContactModal #form")[0].reset();
+              $('#newContactModal').modal('hide');
               toastr["success"](data.message);
             });
           } else
@@ -161,17 +161,17 @@
         contact_uuid: contact_uuid
       },
       success: function(data){
-        $('#edit_modal').modal('show');
-        $("#edit_contact_id").val(data.result.uuid);
-        $("#edit_name").val(data.result.name);
-        $("#edit_username").val(data.result.username);
-        $("#edit_email").val(data.result.email);
-        $("#edit_phone").val(data.result.phone);
-        $("#edit_website").val(data.result.website);
-        $("#edit_street").val(data.result.street);
-        $("#edit_suite").val(data.result.suite);
-        $("#edit_city").val(data.result.city);
-        $("#edit_zipcode").val(data.result.zipcode);
+        $('#editContactModal').modal('show');
+        $("#editContactModal #contact_uuid").val(data.result.uuid);
+        $("#editContactModal #name").val(data.result.name);
+        $("#editContactModal #username").val(data.result.username);
+        $("#editContactModal #email").val(data.result.email);
+        $("#editContactModal #phone").val(data.result.phone);
+        $("#editContactModal #website").val(data.result.website);
+        $("#editContactModal #street").val(data.result.street);
+        $("#editContactModal #suite").val(data.result.suite);
+        $("#editContactModal #city").val(data.result.city);
+        $("#editContactModal #zipcode").val(data.result.zipcode);
       }
     });
   });
@@ -180,16 +180,16 @@
   $(document).on("click", "#updateContact", function(e){
     e.preventDefault();
 
-    const contact_uuid = $("#edit_contact_id").val();
-    const name = $("#edit_name").val();
-    const username = $("#edit_username").val();
-    const email = $("#edit_email").val();
-    const phone = $("#edit_phone").val();
-    const website = $("#edit_website").val();
-    const street = $("#edit_street").val();
-    const suite = $("#edit_suite").val();
-    const city = $("#edit_city").val();
-    const zipcode = $("#edit_zipcode").val();
+    const contact_uuid = $("#editContactModal #contact_uuid").val();
+    const name = $("#editContactModal #name").val();
+    const username = $("#editContactModal #username").val();
+    const email = $("#editContactModal #email").val();
+    const phone = $("#editContactModal #phone").val();
+    const website = $("#editContactModal #website").val();
+    const street = $("#editContactModal #street").val();
+    const suite = $("#editContactModal #suite").val();
+    const city = $("#editContactModal #city").val();
+    const zipcode = $("#editContactModal #zipcode").val();
 
     //Verifica se campos estão preenchidos
     if(contact_uuid == "" || name == "" || username == "" || email == "" || phone == "" || website == "" || street == "" || suite == "" || city == "" || zipcode == "")
@@ -220,8 +220,8 @@
           if(data.success)
           {
             contactsDataTable.ajax.reload(function() {
-              $("#edit-form")[0].reset();
-              $('#edit_modal').modal('hide');
+              $("#editContactModal #form")[0].reset();
+              $('#editContactModal').modal('hide');
               toastr["success"](data.message);
             });
           } else

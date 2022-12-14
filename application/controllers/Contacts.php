@@ -15,6 +15,18 @@ class Contacts extends CI_Controller {
 			$data['title'] = 'Meus contatos';
 			$this->load->view('templates/header',$data);
 			$this->load->view('contacts');
+			$this->load->view('templates/modal', array(
+				'modal_id' => 'newContactModal',
+				'title' => 'Novo contato',
+				'button_id' => 'addContact',
+				'button_content' => 'Salvar contato',
+			));
+			$this->load->view('templates/modal', array(
+				'modal_id' => 'editContactModal',
+				'title' => 'Editar contato',
+				'button_id' => 'updateContact',
+				'button_content' => 'Atualizar contato',
+			));
 			$this->load->view('templates/footer');
 			$this->load->view('js/script_contacts');
 		}
