@@ -9,7 +9,7 @@
 	<!-- Botão -->
 	<div class="row">
 		<div class="col-md-12 mt-2 text-end">
-			<a href="<?php echo base_url(); ?>" class="btn btn-outline-secondary btn-sm">Meus contatos</a>
+			<a href="<?php echo base_url(); ?>" class="btn btn-primary btn-sm">Meus contatos</a>
 		</div>
 	</div>
 	<!-- Data Table -->
@@ -18,7 +18,6 @@
 			<table class="table" id="contacts">
 				<thead>
 					<tr>
-						<th>ID</th>
 						<th>Nome</th>
 						<th>Sobrenome</th>
 						<th>Email</th>

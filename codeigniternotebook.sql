@@ -33,14 +33,14 @@ CREATE DATABASE IF NOT EXISTS `codeigniternotebook`;
 -- Table structure for table `address`
 --
 
-CREATE TABLE `address` (
+CREATE TABLE `contact_addresses` (
   `id` int(11) NOT NULL,
   `street` varchar(255) NOT NULL,
   `suite` varchar(255) NOT NULL,
   `city` varchar(255) NOT NULL,
-  `zipcode` varchar(255) NOT NULL,
+  `zipcode` varchar(16) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_ad` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -51,7 +51,7 @@ CREATE TABLE `address` (
 
 CREATE TABLE `contacts` (
   `id` int(11) NOT NULL,
-  `uuid` binary(36) NOT NULL,
+  `uuid` char(36) NOT NULL DEFAULT (UUID()),
   `name` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE `contacts` (
 --
 -- Indexes for table `address`
 --
-ALTER TABLE `address`
+ALTER TABLE `contact_addresses`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -86,7 +86,7 @@ ALTER TABLE `contacts`
 --
 -- AUTO_INCREMENT for table `address`
 --
-ALTER TABLE `address`
+ALTER TABLE `contact_addresses`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

@@ -3,15 +3,15 @@
   $(document).on("click", "#addContact", function(e){
     e.preventDefault();
 
-    var name = $("#name").val();
-    var username = $("#username").val();
-    var email = $("#email").val();
-    var phone = $("#phone").val();
-    var website = $("#website").val();
-    var street = $("#street").val();
-    var suite = $("#suite").val();
-    var city = $("#city").val();
-    var zipcode = $("#zipcode").val();
+    const name = $("#name").val();
+    const username = $("#username").val();
+    const email = $("#email").val();
+    const phone = $("#phone").val();
+    const website = $("#website").val();
+    const street = $("#street").val();
+    const suite = $("#suite").val();
+    const city = $("#city").val();
+    const zipcode = $("#zipcode").val();
 
     //Verifica se todos os campos estão preenchidos
     if(name == "" || username == "" || email == "" || phone == "" || website == "" || street == "" || suite == "" || city == "" || zipcode == "")
@@ -57,8 +57,8 @@
   //Preenche DataTable com dados do banco
   function fetch(){
     $.ajax({
-      url: "<?php echo base_url(); ?>fetch",
-      type: "post",
+      url: "<?php echo base_url(); ?>contacts",
+      type: "get",
       dataType: "json",
       success: function(data){
         //DataTable
@@ -66,9 +66,8 @@
           language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/pt-BR.json'
           },
-          data: data.posts,
+          data: data,
           columns: [
-              { data: 'id' },
               { data: 'name', render: function(value, type){
                 return value.split(/\s(.+)/)[0];
               } },
@@ -81,8 +80,8 @@
               { data: 'phone' },
               { data: 'uuid', render: function(value, type){
                 return `
-                    <a href="#" value="${value}" id="edit" class="btn btn-sm btn-outline-success">Editar</a>
-                    <a href="#" value="${value}" id="del" class="btn btn-sm btn-outline-danger">Deletar</a>
+                    <a href="#" value="${value}" id="edit" class="btn btn-sm btn-secondary">Editar</a>
+                    <a href="#" value="${value}" id="del" class="btn btn-sm btn-danger">Deletar</a>
                 `
               } },
           ],
@@ -96,7 +95,7 @@
   $(document).on("click", "#del", function(e){
     e.preventDefault();
 
-    var del_uuid = $(this).attr("value");
+    const contact_uuid = $(this).attr("value");
 
     //SweetAlert
     const swalWithBootstrapButtons = Swal.mixin({
@@ -125,7 +124,7 @@
           type: "post",
           dataType: "json",
           data: {
-            del_uuid: del_uuid
+            contact_uuid: contact_uuid
           },
           success: function(data){
             //Atualiza tabela e exibe mensagem
@@ -155,27 +154,27 @@
   $(document).on("click", "#edit", function(e){
     e.preventDefault();
 
-    var edit_uuid = $(this).attr("value");
+    const contact_uuid = $(this).attr("value");
 
     $.ajax({
       url: "<?php echo base_url(); ?>edit",
       type: "post",
       dataType: "json",
       data: {
-        edit_uuid: edit_uuid
+        contact_uuid: contact_uuid
       },
       success: function(data){
         $('#edit_modal').modal('show');
-        $("#edit_contact_id").val(data.post.uuid);
-        $("#edit_name").val(data.post.name);
-        $("#edit_username").val(data.post.username);
-        $("#edit_email").val(data.post.email);
-        $("#edit_phone").val(data.post.phone);
-        $("#edit_website").val(data.post.website);
-        $("#edit_street").val(data.post.street);
-        $("#edit_suite").val(data.post.suite);
-        $("#edit_city").val(data.post.city);
-        $("#edit_zipcode").val(data.post.zipcode);
+        $("#edit_contact_id").val(data.result.uuid);
+        $("#edit_name").val(data.result.name);
+        $("#edit_username").val(data.result.username);
+        $("#edit_email").val(data.result.email);
+        $("#edit_phone").val(data.result.phone);
+        $("#edit_website").val(data.result.website);
+        $("#edit_street").val(data.result.street);
+        $("#edit_suite").val(data.result.suite);
+        $("#edit_city").val(data.result.city);
+        $("#edit_zipcode").val(data.result.zipcode);
       }
     });
   });
@@ -184,16 +183,16 @@
   $(document).on("click", "#updateContact", function(e){
     e.preventDefault();
 
-    var contact_uuid = $("#edit_contact_id").val();
-    var name = $("#edit_name").val();
-    var username = $("#edit_username").val();
-    var email = $("#edit_email").val();
-    var phone = $("#edit_phone").val();
-    var website = $("#edit_website").val();
-    var street = $("#edit_street").val();
-    var suite = $("#edit_suite").val();
-    var city = $("#edit_city").val();
-    var zipcode = $("#edit_zipcode").val();
+    const contact_uuid = $("#edit_contact_id").val();
+    const name = $("#edit_name").val();
+    const username = $("#edit_username").val();
+    const email = $("#edit_email").val();
+    const phone = $("#edit_phone").val();
+    const website = $("#edit_website").val();
+    const street = $("#edit_street").val();
+    const suite = $("#edit_suite").val();
+    const city = $("#edit_city").val();
+    const zipcode = $("#edit_zipcode").val();
 
     //Verifica se campos estão preenchidos
     if(contact_uuid == "" || name == "" || username == "" || email == "" || phone == "" || website == "" || street == "" || suite == "" || city == "" || zipcode == "")

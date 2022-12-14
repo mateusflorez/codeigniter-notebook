@@ -10,13 +10,13 @@
 	<div class="row">
 		<!-- Botão Modal -->
 		<div class="col-md-6 mt-2">
-			<button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+			<button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
 				Novo contato
 			</button>
 		</div>
 		<!-- Botão -->
 		<div class="col-md-6 mt-2 text-end">
-			<a href="<?php echo base_url(); ?>others" class="btn btn-outline-secondary btn-sm">Outros contatos</a>
+			<a href="<?php echo base_url(); ?>others" class="btn btn-primary btn-sm">Outros contatos</a>
 		</div>
 	</div>
 	<!-- Data Table -->
@@ -25,7 +25,6 @@
 			<table class="table" id="contacts">
 				<thead>
 					<tr>
-						<th>ID</th>
 						<th>Nome</th>
 						<th>Sobrenome</th>
 						<th>Email</th>
@@ -74,7 +73,7 @@
 								<input type="text" id="phone" class="form-control">
 							</div>
 							<div class="form-group">
-								<label>website</label>
+								<label>Website</label>
 								<input type="text" id="website" class="form-control">
 							</div>
 						</div>
@@ -140,7 +139,7 @@
 								<input type="text" id="edit_phone" class="form-control">
 							</div>
 							<div class="form-group">
-								<label>website</label>
+								<label>Website</label>
 								<input type="text" id="edit_website" class="form-control">
 							</div>
 						</div>

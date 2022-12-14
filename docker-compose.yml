@@ -8,7 +8,8 @@ services:
     volumes:
     - ./:/app
     depends_on:
-      - db
+      wait-for-db:
+        condition: service_completed_successfully
 
   db:
     image: mysql:8.0.31
@@ -20,12 +21,19 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: codeigniternotebook
 
+  wait-for-db:
+    image: atkrad/wait4x
+    depends_on:
+      - db
+    command: tcp db:3306 -t 120s -i 1s
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
       - "8080:80"
     depends_on:
-      - db
+      wait-for-db:
+        condition: service_completed_successfully
     environment:
       MYSQL_USERNAME: "root"
       MYSQL_ROOT_PASSWORD: "root"

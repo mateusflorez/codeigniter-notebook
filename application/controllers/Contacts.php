@@ -5,11 +5,19 @@ class Contacts extends CI_Controller {
 
 	public function index()
 	{
-		$data['title'] = 'Meus contatos';
-		$this->load->view('templates/header',$data);
-		$this->load->view('contacts');
-		$this->load->view('templates/footer');
-		$this->load->view('js/script_contacts');
+		//Se for ajax
+		if ($this->input->is_ajax_request())
+		{
+			$results = $this->contacts_model->get();
+			echo json_encode($results);
+		} else
+		{
+			$data['title'] = 'Meus contatos';
+			$this->load->view('templates/header',$data);
+			$this->load->view('contacts');
+			$this->load->view('templates/footer');
+			$this->load->view('js/script_contacts');
+		}
 	}
 
 	public function others()
@@ -26,22 +34,14 @@ class Contacts extends CI_Controller {
 		//Se for ajax
 		if ($this->input->is_ajax_request())
 		{
-			$this->form_validation->set_rules('name', 'Name', 'required');
-			$this->form_validation->set_rules('username', 'Username', 'required');
-			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-			$this->form_validation->set_rules('phone', 'Phone', 'required');
-			$this->form_validation->set_rules('website', 'Website', 'required');
-			$this->form_validation->set_rules('street', 'Street', 'required');
-			$this->form_validation->set_rules('suite', 'Suite', 'required');
-			$this->form_validation->set_rules('city', 'City', 'required');
-			$this->form_validation->set_rules('zipcode', 'Zipcode', 'required');
+			$this->validate_form();
 
 			//Se validar
 			if($this->form_validation->run() === TRUE)
 			{
 				$ajax_data = $this->input->post();
 				//Se inserir
-				if($this->contacts_model->insert_data($ajax_data))
+				if($this->contacts_model->insert($ajax_data))
 				{
 					$data = array('success' => TRUE, 'message' => 'Contato adicionado com sucesso');
 				} else
@@ -59,27 +59,13 @@ class Contacts extends CI_Controller {
 		}
 	}
 
-	public function fetch()
-	{
-		//Se for ajax
-		if ($this->input->is_ajax_request())
-		{
-			$posts = $this->contacts_model->get_data();
-			$data = array('success' => TRUE, 'posts' => $posts);
-			echo json_encode($data);
-		} else
-		{
-			echo "Nenhum acesso direto ao script é permitido";
-		}
-	}
-
 	public function delete()
 	{
 		//Se for ajax
 		if ($this->input->is_ajax_request())
 		{
-			$del_uuid = $this->input->post('del_uuid');
-			$this->contacts_model->delete_data($del_uuid);
+			$contact_uuid = $this->input->post('contact_uuid');
+			$this->contacts_model->delete($contact_uuid);
 			$data = array('success' => TRUE);
 			echo json_encode($data);
 		} else
@@ -93,9 +79,9 @@ class Contacts extends CI_Controller {
 		//Se for ajax
 		if ($this->input->is_ajax_request())
 		{
-			$edit_uuid = $this->input->post('edit_uuid');
-			$post = $this->contacts_model->edit_data($edit_uuid);
-			$data = array('success' => TRUE, 'post' => $post);
+			$contact_uuid = $this->input->post('contact_uuid');
+			$result = $this->contacts_model->get($contact_uuid);
+			$data = array('success' => TRUE, 'result' => $result);
 			echo json_encode($data);
 		} else
 		{
@@ -107,22 +93,14 @@ class Contacts extends CI_Controller {
 		//Se for ajax
 		if ($this->input->is_ajax_request())
 		{
-			$this->form_validation->set_rules('name', 'Name', 'required');
-			$this->form_validation->set_rules('username', 'Username', 'required');
-			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-			$this->form_validation->set_rules('phone', 'Phone', 'required');
-			$this->form_validation->set_rules('website', 'Website', 'required');
-			$this->form_validation->set_rules('street', 'Street', 'required');
-			$this->form_validation->set_rules('suite', 'Suite', 'required');
-			$this->form_validation->set_rules('city', 'City', 'required');
-			$this->form_validation->set_rules('zipcode', 'Zipcode', 'required');
+			$this->validate_form();
 
 			//Se validar
 			if($this->form_validation->run() === TRUE)
 			{
 				$ajax_data = $this->input->post();
 				//Se atualizar
-				if($this->contacts_model->update_data($ajax_data))
+				if($this->contacts_model->update($ajax_data))
 				{
 					$data = array('success' => TRUE, 'message' => 'Contato atualizado com sucesso');
 				} else
@@ -138,5 +116,18 @@ class Contacts extends CI_Controller {
 		{
 			echo "Nenhum acesso direto ao script é permitido";
 		}
+	}
+
+	private function validate_form(){
+		$this->form_validation
+				->set_rules('name', 'Nome', 'trim|required')
+				->set_rules('username', 'Usuário', 'trim|required')
+				->set_rules('email', 'Email', 'trim|required|valid_email')
+				->set_rules('phone', 'Telefone', 'trim|required')
+				->set_rules('website', 'Site', 'trim|required')
+				->set_rules('street', 'Rua', 'trim|required')
+				->set_rules('suite', 'Numero/Apartamento', 'trim|required')
+				->set_rules('city', 'Cidade', 'trim|required')
+				->set_rules('zipcode', 'CEP', 'trim|required|max_length[16]');
 	}
 }

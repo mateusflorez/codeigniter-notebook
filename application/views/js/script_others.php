@@ -6,14 +6,13 @@
     return response.json();
   })
   //Popula DataTable com dados
-  .then(function(contatos){
+  .then(function(data){
     $('#contacts').DataTable({
       language: {
         url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/pt-BR.json'
       },
-      data: contatos,
+      data: data,
       columns: [
-          { data: 'id' },
           { data: 'name', render: function(value, type){
             return value.split(/\s(.+)/)[0];
           } },
@@ -26,7 +25,7 @@
           { data: 'phone' },
           { data: 'id', render: function(value, type){
             return `
-                <button type="button"  class="btn btn-sm btn-outline-success" id="addToContacts" data-atr1="${value}">Adicionar</button>
+                <button type="button"  class="btn btn-sm btn-success" id="addToContacts" data-user-id="${value}">Adicionar</button>
             `
           } },
       ],
@@ -37,7 +36,7 @@
   $(document).on("click", "#addToContacts", function(e){
     e.preventDefault();
 
-    let atr1 = event.target.getAttribute('data-atr1');
+    const data_user_id = event.target.getAttribute('data-user-id');
 
     //Busca contatos da API
     fetch("https://jsonplaceholder.typicode.com/users")
@@ -46,19 +45,19 @@
       return response.json();
     })
     //Busca contato no resultado
-    .then(function(contatos){
-      let contato = contatos.find(function(contato){
-        return contato.id == atr1;
+    .then(function(data){
+      const contato = data.find(function(contato){
+        return contato.id == data_user_id;
       });
-      var name = contato.name;
-      var username = contato.username;
-      var email = contato.email;
-      var phone = contato.phone;
-      var website = contato.website;
-      var street = contato.address.street;
-      var suite = contato.address.suite;
-      var city = contato.address.city;
-      var zipcode = contato.address.zipcode;
+      const name = contato.name;
+      const username = contato.username;
+      const email = contato.email;
+      const phone = contato.phone;
+      const website = contato.website;
+      const street = contato.address.street;
+      const suite = contato.address.suite;
+      const city = contato.address.city;
+      const zipcode = contato.address.zipcode;
 
       //Insere contato no banco de dados
       $.ajax({
