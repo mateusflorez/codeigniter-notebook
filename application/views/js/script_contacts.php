@@ -81,8 +81,8 @@
               { data: 'phone' },
               { data: 'uuid', render: function(value, type){
                 return `
-                    <a href="#" value="${value}" id="del" class="btn btn-sm btn-outline-danger">Deletar</a>
                     <a href="#" value="${value}" id="edit" class="btn btn-sm btn-outline-success">Editar</a>
+                    <a href="#" value="${value}" id="del" class="btn btn-sm btn-outline-danger">Deletar</a>
                 `
               } },
           ],
