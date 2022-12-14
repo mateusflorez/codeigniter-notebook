@@ -1,5 +1,39 @@
 <script>
-  //Enviar formulário
+  const contactsDataTable = $('#contacts').DataTable({
+    language: {
+      url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/pt-BR.json'
+    },
+    ajax: {
+      url: "<?php echo base_url(); ?>contacts",
+      dataSrc: '',
+    },
+    columns: [
+        {
+          data: 'name',
+          render: function(value, type){
+            return value.split(/\s(.+)/)[0];
+          }
+        },
+        {
+          data: 'name',
+          render: function(value, type){
+            return value.split(/\s(.+)/)[1];
+          }
+        },
+        { data: 'email' },
+        { data: 'street' },
+        { data: 'city' },
+        { data: 'phone' },
+        { data: 'uuid', render: function(value, type){
+          return `
+            <a href="#" value="${value}" id="edit" class="btn btn-sm btn-secondary">Editar</a>
+            <a href="#" value="${value}" id="del" class="btn btn-sm btn-danger">Deletar</a>
+          `
+        } },
+    ],
+  });
+
+  //Adicionar Contato
   $(document).on("click", "#addContact", function(e){
     e.preventDefault();
 
@@ -40,11 +74,11 @@
           //Atualiza tabela e exibe mensagem
           if(data.success)
           {
-            $('#contacts').DataTable().destroy();
-            fetch();
-            $("#form")[0].reset();
-            $('#exampleModal').modal('hide');
-            toastr["success"](data.message);
+            contactsDataTable.ajax.reload(function() {
+              $("#form")[0].reset();
+              $('#exampleModal').modal('hide');
+              toastr["success"](data.message);
+            });
           } else
           {
             toastr["error"](data.message);
@@ -53,43 +87,6 @@
       });
     }
   });
-
-  //Preenche DataTable com dados do banco
-  function fetch(){
-    $.ajax({
-      url: "<?php echo base_url(); ?>contacts",
-      type: "get",
-      dataType: "json",
-      success: function(data){
-        //DataTable
-        $('#contacts').DataTable({
-          language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/pt-BR.json'
-          },
-          data: data,
-          columns: [
-              { data: 'name', render: function(value, type){
-                return value.split(/\s(.+)/)[0];
-              } },
-              { data: 'name', render: function(value, type){
-                return value.split(/\s(.+)/)[1];
-              } },
-              { data: 'email' },
-              { data: 'street' },
-              { data: 'city' },
-              { data: 'phone' },
-              { data: 'uuid', render: function(value, type){
-                return `
-                    <a href="#" value="${value}" id="edit" class="btn btn-sm btn-secondary">Editar</a>
-                    <a href="#" value="${value}" id="del" class="btn btn-sm btn-danger">Deletar</a>
-                `
-              } },
-          ],
-        });
-      }
-    });
-  }
-  fetch();
 
   //Apaga contato
   $(document).on("click", "#del", function(e){
@@ -128,13 +125,13 @@
           },
           success: function(data){
             //Atualiza tabela e exibe mensagem
-            $('#contacts').DataTable().destroy();
-            fetch();
-            swalWithBootstrapButtons.fire(
-              'Deletado!',
-              'Seu contato foi apagado.',
-              'success'
-            )
+            contactsDataTable.ajax.reload(function() {
+              swalWithBootstrapButtons.fire(
+                'Deletado!',
+                'Seu contato foi apagado.',
+                'success'
+              );
+            });
           }
         });
 
@@ -222,11 +219,11 @@
           //Atualiza tabela e exibe mensagem
           if(data.success)
           {
-            $('#contacts').DataTable().destroy();
-            fetch();
-            $("#edit-form")[0].reset();
-            $('#edit_modal').modal('hide');
-            toastr["success"](data.message);
+            contactsDataTable.ajax.reload(function() {
+              $("#edit-form")[0].reset();
+              $('#edit_modal').modal('hide');
+              toastr["success"](data.message);
+            });
           } else
           {
             toastr["error"](data.message);

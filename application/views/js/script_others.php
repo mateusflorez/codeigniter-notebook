@@ -1,36 +1,37 @@
 <script>
   //Preenche DataTable com dados da API
-  fetch("https://jsonplaceholder.typicode.com/users")
-  //Retorna json com dados da API
-  .then(function(response){
-    return response.json();
-  })
-  //Popula DataTable com dados
-  .then(function(data){
-    $('#contacts').DataTable({
+  $('#contacts').DataTable({
       language: {
         url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/pt-BR.json'
       },
-      data: data,
+      ajax: {
+        url: "https://jsonplaceholder.typicode.com/users",
+        dataSrc: ""
+      },
       columns: [
-          { data: 'name', render: function(value, type){
-            return value.split(/\s(.+)/)[0];
-          } },
-          { data: 'name', render: function(value, type){
-            return value.split(/\s(.+)/)[1];
-          } },
+          {
+            data: 'name',
+            render: function(value, type){
+              return value.split(/\s(.+)/)[0];
+            }
+          },
+          {
+            data: 'name',
+            render: function(value, type){
+              return value.split(/\s(.+)/)[1];
+            }
+          },
           { data: 'email' },
           { data: 'address.street' },
           { data: 'address.city' },
           { data: 'phone' },
           { data: 'id', render: function(value, type){
             return `
-                <button type="button"  class="btn btn-sm btn-success" id="addToContacts" data-user-id="${value}">Adicionar</button>
+              <button type="button"  class="btn btn-sm btn-success" id="addToContacts" data-user-id="${value}">Adicionar</button>
             `
-          } },
+          }},
       ],
     });
-  })
 
   //Adiciona contato aos contatos do banco
   $(document).on("click", "#addToContacts", function(e){
