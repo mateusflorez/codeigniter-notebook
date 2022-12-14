@@ -37,54 +37,39 @@
   $(document).on("click", "#addToContacts", function(e){
     e.preventDefault();
 
-    const data_user_id = event.target.getAttribute('data-user-id');
+    const dataUserId = event.target.getAttribute('data-user-id');
 
     //Busca contatos da API
-    fetch("https://jsonplaceholder.typicode.com/users")
+    fetch(`https://jsonplaceholder.typicode.com/users/${dataUserId}`)
     //Retorna json com dados da API
     .then(function(response){
       return response.json();
     })
-    //Busca contato no resultado
+    //Retorna dados do usuário
     .then(function(data){
-      const contato = data.find(function(contato){
-        return contato.id == data_user_id;
-      });
-      const name = contato.name;
-      const username = contato.username;
-      const email = contato.email;
-      const phone = contato.phone;
-      const website = contato.website;
-      const street = contato.address.street;
-      const suite = contato.address.suite;
-      const city = contato.address.city;
-      const zipcode = contato.address.zipcode;
+      const newContactParams = {
+        name: data.name,
+        username: data.username,
+        email: data.email,
+        phone: data.phone,
+        website: data.website,
+        street: data.address.street,
+        suite: data.address.suite,
+        city: data.address.city,
+        zipcode: data.address.zipcode
+      };
 
       //Insere contato no banco de dados
       $.ajax({
         url: "<?php echo base_url(); ?>insert",
         type: "post",
         dataType: "json",
-        data: {
-          name: name,
-          username: username,
-          email: email,
-          phone: phone,
-          website: website,
-          street: street,
-          suite: suite,
-          city: city,
-          zipcode: zipcode
-        },
+        data: newContactParams,
         success: function(data){
           //Exibe mensagem
-          if(data.success)
-          {
-            toastr["success"](data.message);
-          }else
-          {
-            toastr["error"](data.message);
-          }
+          const message = data.message;
+
+          data.success ? toastr["success"](message) : toastr["error"](message);
         }
       });
     })
