@@ -24,6 +24,12 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Create Database
+--
+
+CREATE DATABASE IF NOT EXISTS `codeigniternotebook`;
+
+--
 -- Table structure for table `address`
 --
 
