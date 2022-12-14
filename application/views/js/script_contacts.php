@@ -1,4 +1,16 @@
 <script>
+  const CONTACT_FORM_FIELDS = [
+    "name",
+    "username",
+    "email",
+    "phone",
+    "website",
+    "street",
+    "suite",
+    "city",
+    "zipcode"
+  ];
+
   const contactsDataTable = $('#contacts').DataTable({
     language: {
       url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/pt-BR.json'
@@ -37,55 +49,31 @@
   $(document).on("click", "#addContact", function(e){
     e.preventDefault();
 
-    const name = $("#newContactModal #name").val();
-    const username = $("#newContactModal #username").val();
-    const email = $("#newContactModal #email").val();
-    const phone = $("#newContactModal #phone").val();
-    const website = $("#newContactModal #website").val();
-    const street = $("#newContactModal #street").val();
-    const suite = $("#newContactModal #suite").val();
-    const city = $("#newContactModal #city").val();
-    const zipcode = $("#newContactModal #zipcode").val();
+    const newContactParams = getContactFormValues("newContactModal");
 
-    //Verifica se todos os campos estão preenchidos
-    if(name == "" || username == "" || email == "" || phone == "" || website == "" || street == "" || suite == "" || city == "" || zipcode == "")
-    {
-      toastr["error"]("Favor preencher todos os campos");
-    } else if(getWordCount(name)<2) {
-      toastr["error"]("Favor preencher nome e sobrenome");
-    } else
-    {
-      $.ajax({
-        url: "<?php echo base_url(); ?>insert",
-        type: "post",
-        dataType: "json",
-        data: {
-          name: name,
-          username: username,
-          email: email,
-          phone: phone,
-          website: website,
-          street: street,
-          suite: suite,
-          city: city,
-          zipcode: zipcode
-        },
-        success: function(data){
-          //Atualiza tabela e exibe mensagem
-          if(data.success)
-          {
-            contactsDataTable.ajax.reload(function() {
-              $("#newContactModal #form")[0].reset();
-              $('#newContactModal').modal('hide');
-              toastr["success"](data.message);
-            });
-          } else
-          {
-            toastr["error"](data.message);
-          }
+    if (!validateContactParams(newContactParams))
+      return;
+
+    $.ajax({
+      url: "<?php echo base_url(); ?>insert",
+      type: "post",
+      dataType: "json",
+      data: newContactParams,
+      success: function(data){
+        //Atualiza tabela e exibe mensagem
+        if(data.success)
+        {
+          contactsDataTable.ajax.reload(function() {
+            $("#newContactModal #form")[0].reset();
+            $("#newContactModal").modal('hide');
+            toastr["success"](data.message);
+          });
+        } else
+        {
+          toastr["error"](data.message);
         }
-      });
-    }
+      }
+    });
   });
 
   //Apaga contato
@@ -151,27 +139,23 @@
   $(document).on("click", "#edit", function(e){
     e.preventDefault();
 
-    const contact_uuid = $(this).attr("value");
+    const contactUUID = $(this).attr("value");
 
     $.ajax({
       url: "<?php echo base_url(); ?>edit",
       type: "post",
       dataType: "json",
       data: {
-        contact_uuid: contact_uuid
+        contact_uuid: contactUUID
       },
       success: function(data){
-        $('#editContactModal').modal('show');
-        $("#editContactModal #contact_uuid").val(data.result.uuid);
-        $("#editContactModal #name").val(data.result.name);
-        $("#editContactModal #username").val(data.result.username);
-        $("#editContactModal #email").val(data.result.email);
-        $("#editContactModal #phone").val(data.result.phone);
-        $("#editContactModal #website").val(data.result.website);
-        $("#editContactModal #street").val(data.result.street);
-        $("#editContactModal #suite").val(data.result.suite);
-        $("#editContactModal #city").val(data.result.city);
-        $("#editContactModal #zipcode").val(data.result.zipcode);
+        const editContactModal = $('#editContactModal');
+        editContactModal.modal('show');
+        editContactModal.find("#contact_uuid").val(data.result.uuid);
+
+        CONTACT_FORM_FIELDS.forEach(function(field){
+          editContactModal.find(`#${field}`).val(data.result[field]);
+        })
       }
     });
   });
@@ -180,58 +164,63 @@
   $(document).on("click", "#updateContact", function(e){
     e.preventDefault();
 
-    const contact_uuid = $("#editContactModal #contact_uuid").val();
-    const name = $("#editContactModal #name").val();
-    const username = $("#editContactModal #username").val();
-    const email = $("#editContactModal #email").val();
-    const phone = $("#editContactModal #phone").val();
-    const website = $("#editContactModal #website").val();
-    const street = $("#editContactModal #street").val();
-    const suite = $("#editContactModal #suite").val();
-    const city = $("#editContactModal #city").val();
-    const zipcode = $("#editContactModal #zipcode").val();
+    const editContactModal = $('#editContactModal');
+    const updateContactParams = getContactFormValues("editContactModal");
+    const contactUUID = editContactModal.find("#contact_uuid").val();
 
-    //Verifica se campos estão preenchidos
-    if(contact_uuid == "" || name == "" || username == "" || email == "" || phone == "" || website == "" || street == "" || suite == "" || city == "" || zipcode == "")
-    {
-      toastr["error"]("Favor preencher todos os campos");
-    } else if(getWordCount(name)<2) {
-      toastr["error"]("Favor preencher nome e sobrenome");
-    } else
-    {
-      $.ajax({
-        url: "<?php base_url(); ?>update",
-        type: "post",
-        dataType: "json",
-        data: {
-          contact_uuid: contact_uuid,
-          name: name,
-          username: username,
-          email: email,
-          phone: phone,
-          website: website,
-          street: street,
-          suite: suite,
-          city: city,
-          zipcode: zipcode
-        },
-        success: function(data){
-          //Atualiza tabela e exibe mensagem
-          if(data.success)
-          {
-            contactsDataTable.ajax.reload(function() {
-              $("#editContactModal #form")[0].reset();
-              $('#editContactModal').modal('hide');
-              toastr["success"](data.message);
-            });
-          } else
-          {
-            toastr["error"](data.message);
-          }
+    if (!validateContactParams(updateContactParams))
+      return;
+
+    $.ajax({
+      url: "<?php base_url(); ?>update",
+      type: "post",
+      dataType: "json",
+      data: Object.assign({}, {contact_uuid: contactUUID}, updateContactParams),
+      success: function(data){
+        //Atualiza tabela e exibe mensagem
+        if(data.success)
+        {
+          contactsDataTable.ajax.reload(function() {
+            editContactModal.find("#form")[0].reset();
+            editContactModal.modal('hide');
+            toastr["success"](data.message);
+          });
+        } else
+        {
+          toastr["error"](data.message);
         }
-      });
-    }
+      }
+    });
   });
+
+  // Extrai os valores dos inputs do form
+  function getContactFormValues(formId) {
+    const contactParams = {};
+
+    CONTACT_FORM_FIELDS.forEach(function(field){
+      contactParams[field] = $(`#${formId} #${field}`).val();
+    })
+
+    return contactParams;
+  }
+
+  // Valida os parametros do formulário
+  function validateContactParams(contactParams) {
+    let isValid = false;
+    const hasMissingFields = CONTACT_FORM_FIELDS.some(function(field){
+      return contactParams[field] == '';
+    })
+
+    //Verifica se todos os campos estão preenchidos
+    if (hasMissingFields)
+      toastr["error"]("Favor preencher todos os campos");
+    else if (getWordCount(contactParams["name"]) < 2)
+      toastr["error"]("Favor preencher nome e sobrenome");
+    else
+      isValid = true;
+
+    return isValid;
+  }
 
   //Conta quantidade de palavras
   function getWordCount(str) {

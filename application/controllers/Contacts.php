@@ -15,13 +15,13 @@ class Contacts extends CI_Controller {
 			$data['title'] = 'Meus contatos';
 			$this->load->view('templates/header',$data);
 			$this->load->view('contacts');
-			$this->load->view('templates/modal', array(
+			$this->load->view('templates/contact_modal_form', array(
 				'modal_id' => 'newContactModal',
 				'title' => 'Novo contato',
 				'button_id' => 'addContact',
 				'button_content' => 'Salvar contato',
 			));
-			$this->load->view('templates/modal', array(
+			$this->load->view('templates/contact_modal_form', array(
 				'modal_id' => 'editContactModal',
 				'title' => 'Editar contato',
 				'button_id' => 'updateContact',
