@@ -55,7 +55,7 @@ class Contacts extends CI_Controller {
 			echo json_encode($data);
 		} else
 		{
-			echo "Nenhum acesso direto ao script é permitido";
+			$this->show_403();
 		}
 	}
 
@@ -70,7 +70,7 @@ class Contacts extends CI_Controller {
 			echo json_encode($data);
 		} else
 		{
-			echo "Nenhum acesso direto ao script é permitido";
+			$this->show_403();
 		}
 	}
 
@@ -85,7 +85,7 @@ class Contacts extends CI_Controller {
 			echo json_encode($data);
 		} else
 		{
-			echo "Nenhum acesso direto ao script é permitido";
+			$this->show_403();
 		}
 	}
 
@@ -114,7 +114,7 @@ class Contacts extends CI_Controller {
 			echo json_encode($data);
 		} else
 		{
-			echo "Nenhum acesso direto ao script é permitido";
+			$this->show_403();
 		}
 	}
 
@@ -130,4 +130,9 @@ class Contacts extends CI_Controller {
 				->set_rules('city', 'Cidade', 'trim|required')
 				->set_rules('zipcode', 'CEP', 'trim|required|max_length[16]');
 	}
+
+  private function show_403() {
+
+    show_error("Acesso negado! <a target='_blank' href='".base_url()."'>Clique aqui pra ir para pagina principal</a>", 403, "403 Forbidden");
+  }
 }
