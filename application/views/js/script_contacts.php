@@ -61,15 +61,14 @@
       data: newContactParams,
       success: function(data){
         //Atualiza tabela e exibe mensagem
-        if(data.success)
-        {
+        if(data.success){
           contactsDataTable.ajax.reload(function() {
-            $("#newContactModal #form")[0].reset();
-            $("#newContactModal").modal('hide');
+            const newContactModal = $('#newContactModal');
+            newContactModal.find("#form")[0].reset();
+            newContactModal.modal('hide');
             toastr["success"](data.message);
           });
-        } else
-        {
+        } else {
           toastr["error"](data.message);
         }
       }
@@ -178,15 +177,13 @@
       data: Object.assign({}, {contact_uuid: contactUUID}, updateContactParams),
       success: function(data){
         //Atualiza tabela e exibe mensagem
-        if(data.success)
-        {
+        if(data.success){
           contactsDataTable.ajax.reload(function() {
             editContactModal.find("#form")[0].reset();
             editContactModal.modal('hide');
             toastr["success"](data.message);
           });
-        } else
-        {
+        } else {
           toastr["error"](data.message);
         }
       }

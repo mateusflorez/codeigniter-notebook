@@ -6,12 +6,10 @@ class Contacts extends CI_Controller {
 	public function index()
 	{
 		//Se for ajax
-		if ($this->input->is_ajax_request())
-		{
+		if ($this->input->is_ajax_request()){
 			$results = $this->contacts_model->get();
 			echo json_encode($results);
-		} else
-		{
+		} else {
 			$data['title'] = 'Meus contatos';
 			$this->load->view('templates/header',$data);
 			$this->load->view('contacts');
@@ -44,90 +42,87 @@ class Contacts extends CI_Controller {
 	public function insert()
 	{
 		//Se for ajax
-		if ($this->input->is_ajax_request())
-		{
-			$this->validate_form();
-
-			//Se validar
-			if($this->form_validation->run() === TRUE)
-			{
-				$ajax_data = $this->input->post();
-				//Se inserir
-				if($this->contacts_model->insert($ajax_data))
-				{
-					$data = array('success' => TRUE, 'message' => 'Contato adicionado com sucesso');
-				} else
-				{
-					$data = array('success' => FALSE, 'message' => 'Falha ao salvar contato');
-				}
-			} else
-			{
-				$data = array('success' => FALSE, 'message' => validation_errors());
-			}
-			echo json_encode($data);
-		} else
-		{
+		if ($this->input->is_ajax_request() === FALSE){
 			$this->show_403();
+			return;
 		}
+
+		//Se validar
+		$this->validate_form();
+		if($this->form_validation->run() === FALSE){
+			$data = array('success' => FALSE, 'message' => validation_errors());
+			echo json_encode($data);
+			return;
+		}
+
+		//Se inserir
+		$ajax_data = $this->input->post();
+		if($this->contacts_model->insert($ajax_data)){
+			$data = array('success' => TRUE, 'message' => 'Contato adicionado com sucesso');
+		} else {
+			$data = array('success' => FALSE, 'message' => 'Falha ao salvar contato');
+		}
+
+		echo json_encode($data);
 	}
+
 
 	public function delete()
 	{
 		//Se for ajax
-		if ($this->input->is_ajax_request())
-		{
-			$contact_uuid = $this->input->post('contact_uuid');
-			$this->contacts_model->delete($contact_uuid);
-			$data = array('success' => TRUE);
-			echo json_encode($data);
-		} else
-		{
+		if ($this->input->is_ajax_request() == FALSE){
 			$this->show_403();
+			return;
 		}
+
+		//Deleta contato
+		$contact_uuid = $this->input->post('contact_uuid');
+		$this->contacts_model->delete($contact_uuid);
+		$data = array('success' => TRUE);
+
+		echo json_encode($data);
 	}
 
 	public function edit()
 	{
 		//Se for ajax
-		if ($this->input->is_ajax_request())
-		{
-			$contact_uuid = $this->input->post('contact_uuid');
-			$result = $this->contacts_model->get($contact_uuid);
-			$data = array('success' => TRUE, 'result' => $result);
-			echo json_encode($data);
-		} else
-		{
+		if ($this->input->is_ajax_request() === FALSE){
 			$this->show_403();
+			return;
 		}
+
+		//Retorna dados do contato
+		$contact_uuid = $this->input->post('contact_uuid');
+		$result = $this->contacts_model->get($contact_uuid);
+		$data = array('success' => TRUE, 'result' => $result);
+
+		echo json_encode($data);
 	}
 
 	public function update(){
 		//Se for ajax
-		if ($this->input->is_ajax_request())
-		{
-			$this->validate_form();
-
-			//Se validar
-			if($this->form_validation->run() === TRUE)
-			{
-				$ajax_data = $this->input->post();
-				//Se atualizar
-				if($this->contacts_model->update($ajax_data))
-				{
-					$data = array('success' => TRUE, 'message' => 'Contato atualizado com sucesso');
-				} else
-				{
-					$data = array('success' => FALSE, 'message' => 'Falha ao atualizar contato');
-				}
-			} else
-			{
-				$data = array('success' => FALSE, 'message' => validation_errors());
-			}
-			echo json_encode($data);
-		} else
-		{
+		if ($this->input->is_ajax_request() === FALSE){
 			$this->show_403();
+			return;
 		}
+
+		//Se validar
+		$this->validate_form();
+		if($this->form_validation->run() === FALSE){
+			$data = array('success' => FALSE, 'message' => validation_errors());
+			echo json_encode($data);
+			return;
+		}
+
+		//Se atualizar
+		$ajax_data = $this->input->post();
+		if($this->contacts_model->update($ajax_data)){
+			$data = array('success' => TRUE, 'message' => 'Contato atualizado com sucesso');
+		} else {
+			$data = array('success' => FALSE, 'message' => 'Falha ao atualizar contato');
+		}
+
+		echo json_encode($data);
 	}
 
 	private function validate_form(){
@@ -144,7 +139,6 @@ class Contacts extends CI_Controller {
 	}
 
   private function show_403() {
-
     show_error("Acesso negado! <a target='_blank' href='".base_url()."'>Clique aqui pra ir para pagina principal</a>", 403, "403 Forbidden");
   }
 }
