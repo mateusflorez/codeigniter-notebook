@@ -62,22 +62,20 @@ class Contacts extends CI_Controller {
 	}
 
 
-	public function delete()
+	public function delete($uuid)
 	{
 		//Se não for uma requisição AJAX redireciona para pagina de acesso proibido
 		if (!$this->input->is_ajax_request()){
 			return $this->show_403();
 		}
 
-		$contact_uuid = $this->input->post('contact_uuid');
-
-    //Se não existir o contato no DB, retornar 404
-    if(!$this->contacts_model->get($contact_uuid)) {
+		//Se não existir o contato no DB, retornar 404
+    if(!$this->contacts_model->get($uuid)) {
       return set_status_header(404);
     }
 
     //Deleta contato
-		$this->contacts_model->delete($contact_uuid);
+		$this->contacts_model->delete($uuid);
 
 		set_status_header(204);
 	}

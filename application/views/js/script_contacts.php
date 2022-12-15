@@ -104,15 +104,12 @@
 
         //Envia requisição
         $.ajax({
-          url: "<?php echo base_url(); ?>contacts/delete",
-          type: "post",
+          url: "<?php echo base_url(); ?>contacts/delete/"+contactUUID,
+          type: "get",
           statusCode: {
             404: function() {
               showContactNotFoundAlert((_result) => contactsDataTable.ajax.reload());
             }
-          },
-          data: {
-            contact_uuid: contactUUID
           },
           success: function(data){
             //Atualiza tabela e exibe mensagem

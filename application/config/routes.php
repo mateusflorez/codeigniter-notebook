@@ -56,6 +56,6 @@ $route['contacts'] = 'contacts/index';
 $route['contacts/external'] = 'contacts/external';
 $route['contacts/insert'] = 'contacts/insert';
 $route['contacts/fetch'] = 'contacts/fetch';
-$route['contacts/delete'] = 'contacts/delete';
+$route['contacts/delete/(:any)'] = 'contacts/delete/$1';
 $route['contacts/update'] = 'contacts/update';
 $route['contacts/(:any)'] = 'contacts/get/$1';
