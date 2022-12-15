@@ -15,9 +15,9 @@
     </td>
   </tr>
   <tr>
-    <td>Database</td>
+    <td>MySQL</td>
     <td>
-      MySQL 8.0.31
+       8.0.31
     </td>
   </tr>
 </table>
