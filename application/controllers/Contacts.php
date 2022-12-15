@@ -92,7 +92,6 @@ class Contacts extends CI_Controller {
 		}
 
 		//Retorna dados do contato
-		// $contact_uuid = $this->input->post('contact_uuid');
 		$result = $this->contacts_model->get($uuid);
 		$data = array('success' => TRUE, 'result' => $result);
 
