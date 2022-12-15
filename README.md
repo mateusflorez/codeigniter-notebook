@@ -17,7 +17,7 @@
   <tr>
     <td>Database</td>
     <td>
-      MariaDB
+      MySQL 8.0.31
     </td>
   </tr>
 </table>
