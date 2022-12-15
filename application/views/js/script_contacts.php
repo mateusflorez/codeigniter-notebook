@@ -165,7 +165,7 @@
       return;
 
     $.ajax({
-      url: "<?php base_url(); ?>contacts/update",
+      url: "<?php base_url(); ?>contacts/update/"+contactUUID,
       type: "post",
       dataType: "json",
       statusCode: {
@@ -173,7 +173,7 @@
           showContactNotFoundAlert((_result) => contactsDataTable.ajax.reload());
         }
       },
-      data: Object.assign({}, {contact_uuid: contactUUID}, updateContactParams),
+      data: updateContactParams,
       success: function(data){
         //Atualiza tabela e exibe mensagem
         if(data.success){

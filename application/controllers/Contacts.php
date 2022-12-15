@@ -96,7 +96,7 @@ class Contacts extends CI_Controller {
 		echo json_encode($contact);
 	}
 
-	public function update(){
+	public function update($uuid){
 		//Se não for uma requisição AJAX redireciona para pagina de acesso proibido
 		if (!$this->input->is_ajax_request()){
 			return $this->show_403();
@@ -109,14 +109,13 @@ class Contacts extends CI_Controller {
 		}
 
 		$ajax_data = $this->input->post();
-		$contact_uuid = $ajax_data['contact_uuid'];
 
-		if(!$this->contacts_model->get($contact_uuid)) {
+		if(!$this->contacts_model->get($uuid)) {
       return set_status_header(404);
     }
 
 		//Se atualizar retorna json com mensagem e status
-		$success = $this->contacts_model->update($contact_uuid, $ajax_data);
+		$success = $this->contacts_model->update($uuid, $ajax_data);
 		$message = $success ? 'Contato atualizado com sucesso' : 'Falha ao atualizar contato';
 
 		echo json_encode(array('success' => $success, 'message' => $message));
