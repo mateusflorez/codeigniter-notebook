@@ -171,6 +171,11 @@
       url: "<?php base_url(); ?>contacts/update",
       type: "post",
       dataType: "json",
+      statusCode: {
+        404: function() {
+          showContactNotFoundAlert((_result) => contactsDataTable.ajax.reload());
+        }
+      },
       data: Object.assign({}, {contact_uuid: contactUUID}, updateContactParams),
       success: function(data){
         //Atualiza tabela e exibe mensagem

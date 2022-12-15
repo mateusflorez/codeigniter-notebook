@@ -110,9 +110,14 @@ class Contacts extends CI_Controller {
 			return $this->show_validation_errors();
 		}
 
-		//Se atualizar retorna json com mensagem e status
 		$ajax_data = $this->input->post();
 		$contact_uuid = $ajax_data['contact_uuid'];
+
+		if(!$this->contacts_model->get($contact_uuid)) {
+      return set_status_header(404);
+    }
+
+		//Se atualizar retorna json com mensagem e status
 		$success = $this->contacts_model->update($contact_uuid, $ajax_data);
 		$message = $success ? 'Contato atualizado com sucesso' : 'Falha ao atualizar contato';
 
