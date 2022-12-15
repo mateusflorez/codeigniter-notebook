@@ -121,14 +121,6 @@
           }
         });
 
-      } else if (
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire(
-          'Cancelado',
-          'Seu contato está a salvo!',
-          'error'
-        )
       }
     })
   });
