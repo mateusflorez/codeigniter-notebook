@@ -79,7 +79,7 @@
   $(document).on("click", "#del", function(e){
     e.preventDefault();
 
-    const contact_uuid = $(this).attr("value");
+    const contactUUID = $(this).attr("value");
 
     //SweetAlert
     const swalWithBootstrapButtons = Swal.mixin({
@@ -108,7 +108,7 @@
           type: "post",
           dataType: "json",
           data: {
-            contact_uuid: contact_uuid
+            contact_uuid: contactUUID
           },
           success: function(data){
             //Atualiza tabela e exibe mensagem
