@@ -51,7 +51,7 @@ CREATE TABLE `contact_addresses` (
 
 CREATE TABLE `contacts` (
   `id` int(11) NOT NULL,
-  `uuid` char(36) NOT NULL DEFAULT (UUID()),
+  `uuid` char(36) NOT NULL DEFAULT (UUID()) UNIQUE,
   `name` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
