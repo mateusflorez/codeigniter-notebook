@@ -15,9 +15,9 @@
     </td>
   </tr>
   <tr>
-    <td>Database</td>
+    <td>MySQL version</td>
     <td>
-      MariaDB
+       8.0.31
     </td>
   </tr>
 </table>
