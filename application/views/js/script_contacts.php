@@ -55,7 +55,7 @@
       return;
 
     $.ajax({
-      url: "<?php echo base_url(); ?>insert",
+      url: "<?php echo base_url(); ?>contacts/insert",
       type: "post",
       dataType: "json",
       data: newContactParams,
@@ -104,9 +104,8 @@
 
         //Envia requisição
         $.ajax({
-          url: "<?php echo base_url(); ?>delete",
+          url: "<?php echo base_url(); ?>contacts/delete",
           type: "post",
-          dataType: "json",
           data: {
             contact_uuid: contactUUID
           },
@@ -141,16 +140,16 @@
     const contactUUID = $(this).attr("value");
 
     $.ajax({
-      url: "<?php echo base_url(); ?>get/"+contactUUID,
+      url: "<?php echo base_url(); ?>contacts/"+contactUUID,
       type: "get",
       dataType: "json",
       success: function(data){
         const editContactModal = $('#editContactModal');
         editContactModal.modal('show');
-        editContactModal.find("#contact_uuid").val(data.result.uuid);
+        editContactModal.find("#contact_uuid").val(data.uuid);
 
         CONTACT_FORM_FIELDS.forEach(function(field){
-          editContactModal.find(`#${field}`).val(data.result[field]);
+          editContactModal.find(`#${field}`).val(data[field]);
         })
       }
     });
@@ -168,7 +167,7 @@
       return;
 
     $.ajax({
-      url: "<?php base_url(); ?>update",
+      url: "<?php base_url(); ?>contacts/update",
       type: "post",
       dataType: "json",
       data: Object.assign({}, {contact_uuid: contactUUID}, updateContactParams),

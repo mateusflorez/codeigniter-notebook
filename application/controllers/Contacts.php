@@ -5,7 +5,7 @@ class Contacts extends CI_Controller {
 
 	public function index()
 	{
-		//Se for ajax
+		//Se não for uma requisição AJAX redireciona para pagina de acesso proibido
 		if ($this->input->is_ajax_request()){
 			$results = $this->contacts_model->get();
 			echo json_encode($results);
@@ -41,21 +41,18 @@ class Contacts extends CI_Controller {
 
 	public function insert()
 	{
-		//Se for ajax
-		if ($this->input->is_ajax_request() === FALSE){
-			$this->show_403();
-			return;
+		//Se não for uma requisição AJAX redireciona para pagina de acesso proibido
+		if (!$this->input->is_ajax_request()){
+			return $this->show_403();
 		}
 
-		//Se validar
-		$this->validate_form();
-		if($this->form_validation->run() === FALSE){
-			$data = array('success' => FALSE, 'message' => validation_errors());
-			echo json_encode($data);
-			return;
+		//Se validação falhar retorna erros de validação
+		$valid_form = $this->validate_form();
+		if(!$valid_form){
+			return $this->show_validation_errors();
 		}
 
-		//Se inserir
+		//Se inserir retorna json com mensagem e status
 		$ajax_data = $this->input->post();
 		if($this->contacts_model->insert($ajax_data)){
 			$data = array('success' => TRUE, 'message' => 'Contato adicionado com sucesso');
@@ -63,57 +60,51 @@ class Contacts extends CI_Controller {
 			$data = array('success' => FALSE, 'message' => 'Falha ao salvar contato');
 		}
 
+		set_status_header(201);
 		echo json_encode($data);
 	}
 
 
 	public function delete()
 	{
-		//Se for ajax
-		if ($this->input->is_ajax_request() == FALSE){
-			$this->show_403();
-			return;
+		//Se não for uma requisição AJAX redireciona para pagina de acesso proibido
+		if (!$this->input->is_ajax_request()){
+			return $this->show_403();
 		}
 
 		//Deleta contato
 		$contact_uuid = $this->input->post('contact_uuid');
 		$this->contacts_model->delete($contact_uuid);
-		$data = array('success' => TRUE);
 
-		echo json_encode($data);
+		set_status_header(204);
 	}
 
 	public function get($uuid)
 	{
-		//Se for ajax
-		if ($this->input->is_ajax_request() === FALSE){
-			$this->show_403();
-			return;
+		//Se não for uma requisição AJAX redireciona para pagina de acesso proibido
+		if (!$this->input->is_ajax_request()){
+			return $this->show_403();
 		}
 
 		//Retorna dados do contato
 		$result = $this->contacts_model->get($uuid);
-		$data = array('success' => TRUE, 'result' => $result);
 
-		echo json_encode($data);
+		echo json_encode($result);
 	}
 
 	public function update(){
-		//Se for ajax
-		if ($this->input->is_ajax_request() === FALSE){
-			$this->show_403();
-			return;
+		//Se não for uma requisição AJAX redireciona para pagina de acesso proibido
+		if (!$this->input->is_ajax_request()){
+			return $this->show_403();
 		}
 
-		//Se validar
-		$this->validate_form();
-		if($this->form_validation->run() === FALSE){
-			$data = array('success' => FALSE, 'message' => validation_errors());
-			echo json_encode($data);
-			return;
+		//Se validação falhar retorna erros de validação
+		$valid_form = $this->validate_form();
+		if(!$valid_form){
+			return $this->show_validation_errors();
 		}
 
-		//Se atualizar
+		//Se atualizar retorna json com mensagem e status
 		$ajax_data = $this->input->post();
 		if($this->contacts_model->update($ajax_data)){
 			$data = array('success' => TRUE, 'message' => 'Contato atualizado com sucesso');
@@ -135,9 +126,16 @@ class Contacts extends CI_Controller {
 				->set_rules('suite', 'Numero/Apartamento', 'trim|required')
 				->set_rules('city', 'Cidade', 'trim|required')
 				->set_rules('zipcode', 'CEP', 'trim|required|max_length[16]');
+
+		return $this->form_validation->run();
 	}
 
   private function show_403() {
     show_error("Acesso negado! <a target='_blank' href='".base_url()."'>Clique aqui pra ir para pagina principal</a>", 403, "403 Forbidden");
   }
+
+	private function show_validation_errors(){
+		$data = array('success' => FALSE, 'message' => validation_errors());
+		echo json_encode($data);
+	}
 }

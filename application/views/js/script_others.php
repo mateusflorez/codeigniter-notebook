@@ -61,7 +61,7 @@
 
       //Insere contato no banco de dados
       $.ajax({
-        url: "<?php echo base_url(); ?>insert",
+        url: "<?php echo base_url(); ?>contacts/insert",
         type: "post",
         dataType: "json",
         data: newContactParams,
