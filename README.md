@@ -1,4 +1,4 @@
-### CodeIgniter Notebook
+### 📓 CodeIgniter Notebook
 > Status: Complete :heavy_check_mark:
 
 <table>
@@ -28,17 +28,13 @@
 
 ## Instalation instructions:
 ```
-#Clone the repository.
-git clone https://github.com/mateusflorez/codeigniter-notebook.git
+**This project is configured to run in the Docker environment**, if you prefer to run without Docker, it's necessary to configure the database  and run the `codeigniternotebook.sql` script manually.
 
-#Put the repository inside you local hosting server directory
-
-#Open your database management page.
-
-#Create a database named 'codeigniternotebook'
-
-#Import the .sql file on repository root directory
-
-#Open the project
+**If you are using Docker, follow these steps:**
+1. Clone the project;
+2. Run `docker-compose up --build`;
+3. Wait for the containers to initialize correctly, the database will automatically be created with its structure;
+4. Access the server using the following URL: `http://localhost:4500/`
+   - **PhpMyAdmin:** `http://localhost:8080`
 ```
 Open the browser at the address `localhost/codeigniter-notebook/`.
