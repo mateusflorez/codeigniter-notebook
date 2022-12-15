@@ -83,7 +83,7 @@ class Contacts extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	public function edit()
+	public function get($uuid)
 	{
 		//Se for ajax
 		if ($this->input->is_ajax_request() === FALSE){
@@ -92,8 +92,8 @@ class Contacts extends CI_Controller {
 		}
 
 		//Retorna dados do contato
-		$contact_uuid = $this->input->post('contact_uuid');
-		$result = $this->contacts_model->get($contact_uuid);
+		// $contact_uuid = $this->input->post('contact_uuid');
+		$result = $this->contacts_model->get($uuid);
 		$data = array('success' => TRUE, 'result' => $result);
 
 		echo json_encode($data);

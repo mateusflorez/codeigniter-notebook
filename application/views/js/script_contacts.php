@@ -141,12 +141,9 @@
     const contactUUID = $(this).attr("value");
 
     $.ajax({
-      url: "<?php echo base_url(); ?>edit",
-      type: "post",
+      url: "<?php echo base_url(); ?>get/"+contactUUID,
+      type: "get",
       dataType: "json",
-      data: {
-        contact_uuid: contactUUID
-      },
       success: function(data){
         const editContactModal = $('#editContactModal');
         editContactModal.modal('show');
