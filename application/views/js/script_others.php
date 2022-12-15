@@ -39,41 +39,38 @@
 
     const dataUserId = $(this).attr("data-user-id");
 
-    //Busca contatos da API
-    fetch(`https://jsonplaceholder.typicode.com/users/${dataUserId}`)
-    //Retorna json com dados da API
-    .then(function(response){
-      return response.json();
-    })
-    //Retorna dados do usuário
-    .then(function(data){
-      const newContactParams = {
-        name: data.name,
-        username: data.username,
-        email: data.email,
-        phone: data.phone,
-        website: data.website,
-        street: data.address.street,
-        suite: data.address.suite,
-        city: data.address.city,
-        zipcode: data.address.zipcode
-      };
-
-      //Insere contato no banco de dados
-      $.ajax({
-        url: "<?php echo base_url(); ?>contacts/insert",
-        type: "post",
+    //Busca contato da API
+    $.ajax({
+        url: "https://jsonplaceholder.typicode.com/users/"+dataUserId,
+        type: "get",
         dataType: "json",
-        data: newContactParams,
         success: function(data){
-          //Exibe mensagem
-          const message = data.message;
+          const newContactParams = {
+            name: data.name,
+            username: data.username,
+            email: data.email,
+            phone: data.phone,
+            website: data.website,
+            street: data.address.street,
+            suite: data.address.suite,
+            city: data.address.city,
+            zipcode: data.address.zipcode
+          };
 
-          data.success ? toastr["success"](message) : toastr["error"](message);
+          //Insere contato no banco de dados
+          $.ajax({
+            url: "<?php echo base_url(); ?>contacts/insert",
+            type: "post",
+            dataType: "json",
+            data: newContactParams,
+            success: function(data){
+              //Exibe mensagem
+              const message = data.message;
+
+              data.success ? toastr["success"](message) : toastr["error"](message);
+            }
+          });
         }
       });
     })
-
-
-  })
 </script>
