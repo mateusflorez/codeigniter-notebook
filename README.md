@@ -15,7 +15,7 @@
     </td>
   </tr>
   <tr>
-    <td>MySQL</td>
+    <td>MySQL version</td>
     <td>
        8.0.31
     </td>
