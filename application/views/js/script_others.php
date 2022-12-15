@@ -37,7 +37,7 @@
   $(document).on("click", "#addToContacts", function(e){
     e.preventDefault();
 
-    const dataUserId = event.target.getAttribute('data-user-id');
+    const dataUserId = $(this).attr("data-user-id");
 
     //Busca contatos da API
     fetch(`https://jsonplaceholder.typicode.com/users/${dataUserId}`)

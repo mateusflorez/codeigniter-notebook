@@ -30,13 +30,13 @@
     public function get($uuid = NULL)
     {
       if($uuid === NULL){
-        //Insere dados da chave estrangeira e busca contatos
+        //Busca os dados dos contatos juntamente aos dados do endereço
         $this->db->join('contact_addresses', 'contact_addresses.id = contacts.address_id');
         $query = $this->db->get('contacts');
 
         return $query->result();
       } else {
-        //Insere dados da chave estrangeira e busca contato
+        //Busca os dados de um contato específico juntamente aos dados do endereço
         $this->db->join('contact_addresses', 'contact_addresses.id = contacts.address_id');
         $query = $this->db->get_where('contacts', array('uuid' => $uuid));
 
@@ -53,10 +53,9 @@
       return $this->db->delete('contacts', array('uuid' => $uuid));
     }
 
-    public function update($data){
+    public function update($uuid, $data){
       //Busca dados para endereço
-      $query = $this->db->get_where('contacts', array('uuid' =>$data['contact_uuid']))->result_array();
-      $result = array_shift($query);
+      $contact = $this->get($uuid);
 
       //Atualiza endereço
       $address = array(
@@ -65,17 +64,17 @@
         'city' => $data['city'],
         'zipcode' => $data['zipcode']
       );
-      $this->db->update('contact_addresses', $address, array('id' => $result['address_id']));
+      $this->db->update('contact_addresses', $address, array('id' => $contact->address_id));
 
       //Atualiza contato
-      $contact = array(
+      $new_contact_data = array(
         'name' => $data['name'],
         'username' => $data['username'],
         'email' => $data['email'],
         'phone' => $data['phone'],
         'website' => $data['website']
       );
-      return $this->db->update('contacts', $contact, array('uuid' => $data['contact_uuid']));
+      return $this->db->update('contacts', $new_contact_data, array('uuid' => $uuid));
     }
 
   }

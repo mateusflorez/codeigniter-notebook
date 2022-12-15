@@ -95,10 +95,7 @@ class Contacts extends CI_Controller {
       return set_status_header(404);
     }
 
-    //Retorna dados do contato
-		$result = $this->contacts_model->get($uuid);
-
-		echo json_encode($result);
+		echo json_encode($contact);
 	}
 
 	public function update(){
@@ -115,7 +112,8 @@ class Contacts extends CI_Controller {
 
 		//Se atualizar retorna json com mensagem e status
 		$ajax_data = $this->input->post();
-		$success = $this->contacts_model->update($ajax_data);
+		$contact_uuid = $ajax_data['contact_uuid'];
+		$success = $this->contacts_model->update($contact_uuid, $ajax_data);
 		$message = $success ? 'Contato atualizado com sucesso' : 'Falha ao atualizar contato';
 
 		echo json_encode(array('success' => $success, 'message' => $message));

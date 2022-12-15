@@ -48,8 +48,8 @@
         { data: 'phone' },
         { data: 'uuid', render: function(value, type){
           return `
-            <a href="#" value="${value}" id="edit" class="btn btn-sm btn-secondary">Editar</a>
-            <a href="#" value="${value}" id="del" class="btn btn-sm btn-danger">Deletar</a>
+            <a href="#" data-contact-uuid="${value}" id="edit" class="btn btn-sm btn-secondary">Editar</a>
+            <a href="#" data-contact-uuid="${value}" id="del" class="btn btn-sm btn-danger">Deletar</a>
           `
         } },
     ],
@@ -89,7 +89,7 @@
   $(document).on("click", "#del", function(e){
     e.preventDefault();
 
-    const contactUUID = $(this).attr("value");
+    const contactUUID = $(this).attr("data-contact-uuid");
 
     swalWithBootstrapButtons.fire({
       title: 'Tem certeza?',
@@ -133,7 +133,7 @@
   $(document).on("click", "#edit", function(e){
     e.preventDefault();
 
-    const contactUUID = $(this).attr("value");
+    const contactUUID = $(this).attr("data-contact-uuid");
 
     $.ajax({
       url: "<?php echo base_url(); ?>contacts/"+contactUUID,
@@ -191,21 +191,24 @@
   function getContactFormValues(formId) {
     const contactParams = {};
 
+    //Armazena dados do formulário
     CONTACT_FORM_FIELDS.forEach(function(field){
       contactParams[field] = $(`#${formId} #${field}`).val();
     })
 
+    //Retorna objeto com os dados
     return contactParams;
   }
 
   // Valida os parametros do formulário
   function validateContactParams(contactParams) {
     let isValid = false;
+
+    //Verifica se todos os campos estão preenchidos
     const hasMissingFields = CONTACT_FORM_FIELDS.some(function(field){
       return contactParams[field] == '';
     })
 
-    //Verifica se todos os campos estão preenchidos
     if (hasMissingFields)
       toastr["error"]("Favor preencher todos os campos");
     else if (getWordCount(contactParams["name"]) < 2)
