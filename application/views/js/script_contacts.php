@@ -11,6 +11,16 @@
     "zipcode"
   ];
 
+  //SweetAlert
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      actions: 'my-actions',
+      confirmButton: 'btn btn-success',
+      cancelButton: 'btn btn-danger right-gap'
+    },
+    buttonsStyling: false
+  })
+
   const contactsDataTable = $('#contacts').DataTable({
     language: {
       url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/pt-BR.json'
@@ -81,16 +91,6 @@
 
     const contactUUID = $(this).attr("value");
 
-    //SweetAlert
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        actions: 'my-actions',
-        confirmButton: 'btn btn-success',
-        cancelButton: 'btn btn-danger right-gap'
-      },
-      buttonsStyling: false
-    })
-
     swalWithBootstrapButtons.fire({
       title: 'Tem certeza?',
       text: "Você não poderá de reverter isso!",
@@ -106,6 +106,11 @@
         $.ajax({
           url: "<?php echo base_url(); ?>contacts/delete",
           type: "post",
+          statusCode: {
+            404: function() {
+              showContactNotFoundAlert((_result) => contactsDataTable.ajax.reload());
+            }
+          },
           data: {
             contact_uuid: contactUUID
           },
@@ -120,7 +125,6 @@
             });
           }
         });
-
       }
     })
   });
@@ -135,6 +139,11 @@
       url: "<?php echo base_url(); ?>contacts/"+contactUUID,
       type: "get",
       dataType: "json",
+      statusCode: {
+        404: function() {
+          showContactNotFoundAlert((_result) => contactsDataTable.ajax.reload());
+        }
+      },
       success: function(data){
         const editContactModal = $('#editContactModal');
         editContactModal.modal('show');
@@ -207,6 +216,13 @@
     return isValid;
   }
 
+  function showContactNotFoundAlert(successCb) {
+    swalWithBootstrapButtons.fire(
+      'Contato não encontrado!',
+      'O contato selecionado não foi encontrado, a página será recarregada novamente.',
+      'info'
+    ).then(successCb);
+  }
   //Conta quantidade de palavras
   function getWordCount(str) {
     return str.split(' ')

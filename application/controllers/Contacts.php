@@ -69,8 +69,14 @@ class Contacts extends CI_Controller {
 			return $this->show_403();
 		}
 
-		//Deleta contato
 		$contact_uuid = $this->input->post('contact_uuid');
+
+    //Se não existir o contato no DB, retornar 404
+    if(!$this->contacts_model->get($contact_uuid)) {
+      return set_status_header(404);
+    }
+
+    //Deleta contato
 		$this->contacts_model->delete($contact_uuid);
 
 		set_status_header(204);
@@ -83,7 +89,13 @@ class Contacts extends CI_Controller {
 			return $this->show_403();
 		}
 
-		//Retorna dados do contato
+    $contact = $this->contacts_model->get($uuid);
+    //Se não existir o contato no DB, retornar 404
+    if(!$contact) {
+      return set_status_header(404);
+    }
+
+    //Retorna dados do contato
 		$result = $this->contacts_model->get($uuid);
 
 		echo json_encode($result);

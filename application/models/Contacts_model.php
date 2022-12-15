@@ -44,12 +44,11 @@
       }
 
     }
-
     public function delete($uuid){
+      $contact = $this->get($uuid);
+
       //Apaga endereço
-      $query = $this->db->get_where('contacts', array('uuid' => $uuid))->result_array();
-      $data = array_shift($query);
-      $this->db->delete('contact_addresses', array('id' => $data['address_id']));
+      $this->db->delete('contact_addresses', array('id' => $contact->address_id));
 
       return $this->db->delete('contacts', array('uuid' => $uuid));
     }
