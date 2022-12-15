@@ -16,7 +16,7 @@
 		</div>
 		<!-- Botão -->
 		<div class="col-md-6 mt-2 text-end">
-			<a href="<?php echo base_url(); ?>contacts/others" class="btn btn-primary btn-sm">Outros contatos</a>
+			<a href="<?php echo base_url(); ?>contacts/external" class="btn btn-primary btn-sm">Outros contatos</a>
 		</div>
 	</div>
 	<!-- Data Table -->

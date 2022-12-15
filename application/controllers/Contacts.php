@@ -30,7 +30,7 @@ class Contacts extends CI_Controller {
 		}
 	}
 
-	public function others()
+	public function external()
 	{
 		$data['title'] = 'Outros contatos';
 		$this->load->view('templates/header',$data);
@@ -54,14 +54,11 @@ class Contacts extends CI_Controller {
 
 		//Se inserir retorna json com mensagem e status
 		$ajax_data = $this->input->post();
-		if($this->contacts_model->insert($ajax_data)){
-			$data = array('success' => TRUE, 'message' => 'Contato adicionado com sucesso');
-		} else {
-			$data = array('success' => FALSE, 'message' => 'Falha ao salvar contato');
-		}
+		$success = $this->contacts_model->insert($ajax_data);
+		$message = $success ? 'Contato adicionado com sucesso' : 'Falha ao salvar contato';
 
 		set_status_header(201);
-		echo json_encode($data);
+		echo json_encode(array('success' => $success, 'message' => $message));
 	}
 
 
@@ -106,13 +103,10 @@ class Contacts extends CI_Controller {
 
 		//Se atualizar retorna json com mensagem e status
 		$ajax_data = $this->input->post();
-		if($this->contacts_model->update($ajax_data)){
-			$data = array('success' => TRUE, 'message' => 'Contato atualizado com sucesso');
-		} else {
-			$data = array('success' => FALSE, 'message' => 'Falha ao atualizar contato');
-		}
+		$success = $this->contacts_model->update($ajax_data);
+		$message = $success ? 'Contato atualizado com sucesso' : 'Falha ao atualizar contato';
 
-		echo json_encode($data);
+		echo json_encode(array('success' => $success, 'message' => $message));
 	}
 
 	private function validate_form(){
