@@ -104,7 +104,7 @@
 
         //Envia requisição
         $.ajax({
-          url: "<?php echo base_url(); ?>contacts/delete/"+contactUUID,
+          url: "<?php echo base_url(); ?>contacts/"+contactUUID+"/delete",
           type: "get",
           statusCode: {
             404: function() {
@@ -165,7 +165,7 @@
       return;
 
     $.ajax({
-      url: "<?php base_url(); ?>contacts/update/"+contactUUID,
+      url: "<?php base_url(); ?>contacts/"+contactUUID+"/update",
       type: "post",
       dataType: "json",
       statusCode: {
