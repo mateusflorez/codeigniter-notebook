@@ -28,7 +28,6 @@
     ajax: {
       url: "<?php echo base_url(); ?>contacts"
     },
-    searching: false,
     ordering: false,
     processing: true,
     serverSide: true,

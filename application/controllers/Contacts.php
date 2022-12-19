@@ -8,14 +8,18 @@ class Contacts extends CI_Controller
 	{
 		//Se não for uma requisição AJAX redireciona para pagina de acesso proibido
 		if ($this->input->is_ajax_request()) {
+			$search = $_GET["search"]["value"];
 			$per_page = (int)$_GET['length'];
 			$page = ceil((int)$_GET['start'] / $per_page);
-			$results = $this->contacts_model->get(null, $page + 1, $per_page);
+			$results = $this->contacts_model->get(null, $page + 1, $per_page, $search);
 			$count = $this->contacts_model->count();
+			if ($search) {
+				$filtered_count = $this->contacts_model->count($search);
+			}
 			echo json_encode(array(
 				'data' => $results,
 				'recordsTotal' => $count,
-				'recordsFiltered' => $count
+				'recordsFiltered' => $search ? $filtered_count : $count
 			));
 		} else {
 			$data['title'] = 'Meus contatos';
