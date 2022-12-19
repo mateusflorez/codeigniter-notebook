@@ -26,37 +26,55 @@
       url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/pt-BR.json'
     },
     ajax: {
-      url: "<?php echo base_url(); ?>contacts",
-      dataSrc: '',
+      url: "<?php echo base_url(); ?>contacts"
     },
-    columns: [
-        {
-          data: 'name',
-          render: function(value, type){
-            return value.split(/\s(.+)/)[0];
-          }
-        },
-        {
-          data: 'name',
-          render: function(value, type){
-            return value.split(/\s(.+)/)[1];
-          }
-        },
-        { data: 'email' },
-        { data: 'street' },
-        { data: 'city' },
-        { data: 'phone' },
-        { data: 'uuid', render: function(value, type){
+    searching: false,
+    ordering: false,
+    processing: true,
+    serverSide: true,
+    "info": true,
+    "columnDefs": [{
+      targets: '_all',
+      searchable: false
+    }],
+    columns: [{
+        data: 'name',
+        render: function(value, type) {
+          return value.split(/\s(.+)/)[0];
+        }
+      },
+      {
+        data: 'name',
+        render: function(value, type) {
+          return value.split(/\s(.+)/)[1];
+        }
+      },
+      {
+        data: 'email'
+      },
+      {
+        data: 'street'
+      },
+      {
+        data: 'city'
+      },
+      {
+        data: 'phone'
+      },
+      {
+        data: 'uuid',
+        render: function(value, type) {
           return `
             <a href="#" data-contact-uuid="${value}" id="edit" class="btn btn-sm btn-secondary">Editar</a>
             <a href="#" data-contact-uuid="${value}" id="del" class="btn btn-sm btn-danger">Deletar</a>
           `
-        } },
+        }
+      },
     ],
   });
 
   //Adicionar Contato
-  $(document).on("click", "#addContact", function(e){
+  $(document).on("click", "#addContact", function(e) {
     e.preventDefault();
 
     const newContactParams = getContactFormValues("newContactModal");
@@ -69,9 +87,9 @@
       type: "post",
       dataType: "json",
       data: newContactParams,
-      success: function(data){
+      success: function(data) {
         //Atualiza tabela e exibe mensagem
-        if(data.success){
+        if (data.success) {
           contactsDataTable.ajax.reload(function() {
             const newContactModal = $('#newContactModal');
             newContactModal.find("#form")[0].reset();
@@ -86,7 +104,7 @@
   });
 
   //Apaga contato
-  $(document).on("click", "#del", function(e){
+  $(document).on("click", "#del", function(e) {
     e.preventDefault();
 
     const contactUUID = $(this).attr("data-contact-uuid");
@@ -104,14 +122,14 @@
 
         //Envia requisição
         $.ajax({
-          url: "<?php echo base_url(); ?>contacts/"+contactUUID+"/delete",
+          url: "<?php echo base_url(); ?>contacts/" + contactUUID + "/delete",
           type: "get",
           statusCode: {
             404: function() {
               showContactNotFoundAlert((_result) => contactsDataTable.ajax.reload());
             }
           },
-          success: function(data){
+          success: function(data) {
             //Atualiza tabela e exibe mensagem
             contactsDataTable.ajax.reload(function() {
               swalWithBootstrapButtons.fire(
@@ -127,13 +145,13 @@
   });
 
   //Popula modal com dados do contato
-  $(document).on("click", "#edit", function(e){
+  $(document).on("click", "#edit", function(e) {
     e.preventDefault();
 
     const contactUUID = $(this).attr("data-contact-uuid");
 
     $.ajax({
-      url: "<?php echo base_url(); ?>contacts/"+contactUUID,
+      url: "<?php echo base_url(); ?>contacts/" + contactUUID,
       type: "get",
       dataType: "json",
       statusCode: {
@@ -141,12 +159,12 @@
           showContactNotFoundAlert((_result) => contactsDataTable.ajax.reload());
         }
       },
-      success: function(data){
+      success: function(data) {
         const editContactModal = $('#editContactModal');
         editContactModal.modal('show');
         editContactModal.find("#contact_uuid").val(data.uuid);
 
-        CONTACT_FORM_FIELDS.forEach(function(field){
+        CONTACT_FORM_FIELDS.forEach(function(field) {
           editContactModal.find(`#${field}`).val(data[field]);
         })
       }
@@ -154,7 +172,7 @@
   });
 
   //Atualiza contato
-  $(document).on("click", "#updateContact", function(e){
+  $(document).on("click", "#updateContact", function(e) {
     e.preventDefault();
 
     const editContactModal = $('#editContactModal');
@@ -165,7 +183,7 @@
       return;
 
     $.ajax({
-      url: "<?php base_url(); ?>contacts/"+contactUUID+"/update",
+      url: "<?php base_url(); ?>contacts/" + contactUUID + "/update",
       type: "post",
       dataType: "json",
       statusCode: {
@@ -174,9 +192,9 @@
         }
       },
       data: updateContactParams,
-      success: function(data){
+      success: function(data) {
         //Atualiza tabela e exibe mensagem
-        if(data.success){
+        if (data.success) {
           contactsDataTable.ajax.reload(function() {
             editContactModal.find("#form")[0].reset();
             editContactModal.modal('hide');
@@ -194,7 +212,7 @@
     const contactParams = {};
 
     //Armazena dados do formulário
-    CONTACT_FORM_FIELDS.forEach(function(field){
+    CONTACT_FORM_FIELDS.forEach(function(field) {
       contactParams[field] = $(`#${formId} #${field}`).val();
     })
 
@@ -207,7 +225,7 @@
     let isValid = false;
 
     //Verifica se todos os campos estão preenchidos
-    const hasMissingFields = CONTACT_FORM_FIELDS.some(function(field){
+    const hasMissingFields = CONTACT_FORM_FIELDS.some(function(field) {
       return contactParams[field] == '';
     })
 
@@ -231,7 +249,9 @@
   //Conta quantidade de palavras
   function getWordCount(str) {
     return str.split(' ')
-    .filter(function(n) { return n != '' })
-    .length;
+      .filter(function(n) {
+        return n != ''
+      })
+      .length;
   }
 </script>

@@ -8,8 +8,15 @@ class Contacts extends CI_Controller
 	{
 		//Se não for uma requisição AJAX redireciona para pagina de acesso proibido
 		if ($this->input->is_ajax_request()) {
-			$results = $this->contacts_model->get();
-			echo json_encode($results);
+			$per_page = (int)$_GET['length'];
+			$page = ceil((int)$_GET['start'] / $per_page);
+			$results = $this->contacts_model->get(null, $page + 1, $per_page);
+			$count = $this->contacts_model->count();
+			echo json_encode(array(
+				'data' => $results,
+				'recordsTotal' => $count,
+				'recordsFiltered' => $count
+			));
 		} else {
 			$data['title'] = 'Meus contatos';
 			$this->load->view('templates/header', $data);
@@ -121,12 +128,6 @@ class Contacts extends CI_Controller
 		$message = $success ? 'Contato atualizado com sucesso' : 'Falha ao atualizar contato';
 
 		echo json_encode(array('success' => $success, 'message' => $message));
-	}
-
-	public function test($page)
-	{
-		$results = $this->contacts_model->get(null, (int)$page);
-		echo json_encode($results);
 	}
 
 	private function validate_form()

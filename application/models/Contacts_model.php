@@ -28,13 +28,13 @@ class Contacts_model extends CI_Model
     return $this->db->insert('contacts', $contact);
   }
 
-  public function get($uuid = NULL, $page = 1)
+  public function get($uuid = NULL, $page = 1, $per_page = 10)
   {
     if ($uuid === NULL) {
       //Busca os dados dos contatos juntamente aos dados do endereço
       $this->db->join('contact_addresses', 'contact_addresses.id = contacts.address_id');
-      $offset = ($page - 1) * 10;
-      $this->db->limit(10, $offset);
+      $offset = ($page - 1) * $per_page;
+      $this->db->limit($per_page, $offset);
       $query = $this->db->get('contacts');
 
       return $query->result();
@@ -79,5 +79,10 @@ class Contacts_model extends CI_Model
       'website' => $data['website']
     );
     return $this->db->update('contacts', $new_contact_data, array('uuid' => $uuid));
+  }
+
+  public function count()
+  {
+    return $this->db->count_all('contacts');
   }
 }
