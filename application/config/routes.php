@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -58,4 +58,5 @@ $route['contacts/insert'] = 'contacts/insert';
 $route['contacts/fetch'] = 'contacts/fetch';
 $route['contacts/(:any)/delete'] = 'contacts/delete/$1';
 $route['contacts/(:any)/update'] = 'contacts/update/$1';
+$route['contacts/test/(:num)'] = 'contacts/test/$1';
 $route['contacts/(:any)'] = 'contacts/get/$1';
